@@ -1,8 +1,8 @@
 // Replace these with your actual Google Form URLs
 const FORM_URLS = {
-    SELL: "https://docs.google.com/forms/d/e/1FAIpQLSfLawoPBdr1NikoulKyGQgm31HMkKtCUMAqs_WNv6cIvJamRA/viewform?usp=publish-editor",
-    BUY: "https://docs.google.com/forms/d/e/1FAIpQLSdzGcZ8On8Bnh09sa-pWca7NcLBNOtdrW_hWhiqkWOh0fg3qg/viewform?usp=publish-editor", 
-    REPORT: "https://docs.google.com/forms/d/e/1FAIpQLSdAh29HyY8GhU5hjC5T0QhUQOJQduURC72Fp-8lYoDXIvatDQ/viewform?usp=publish-editor"
+    SELL: "https://docs.google.com/forms/d/e/1FAIpQLSfLawoPBdr1NikoulKyGQgm31HMkKtCUMAqs_WNv6cIvJamRA/viewform",
+    BUY: "https://docs.google.com/forms/d/e/1FAIpQLSdzGcZ8On8Bnh09sa-pWca7NcLBNOtdrW_hWhiqkWOh0fg3qg/viewform", 
+    REPORT: "https://docs.google.com/forms/d/e/1FAIpQLSdAh29HyY8GhU5hjC5T0QhUQOJQduURC72Fp-8lYoDXIvatDQ/viewform"
 };
 
 // Google Apps Script Web App URL for real data
@@ -250,7 +250,7 @@ window.onclick = function(event) {
             document.getElementById(modalId.replace('Modal', 'Form')).src = '';
         }
     });
-}
+};
 
 // Add refresh button to header (optional enhancement)
 // You can add this button to your HTML header later
