@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SellBuyScrap.com - Free Scrap Trading Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>SellBuyScrap.com</h1>
+        <div class="header-buttons">
+            <button class="filter-btn" onclick="toggleFilter()">Filter</button>
+            <button class="sell-btn" onclick="openSellForm()">Sell</button>
+            <button class="buy-btn" onclick="openBuyForm()">Buy</button>
+        </div>
+    </header>
+
+    <!-- Filter Section -->
+    <div id="filterSection" class="filter-section" style="display: none;">
+        <input type="text" id="searchInput" placeholder="Search...">
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="Plastic">Plastic</option>
+            <option value="Metal">Metal</option>
+            <option value="Paper">Paper</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Other">Other</option>
+        </select>
+        <select id="cityFilter">
+            <option value="">All Cities</option>
+            <!-- Cities will be added dynamically -->
+        </select>
+        <select id="typeFilter">
+            <option value="">All Types</option>
+            <option value="Sell">Sell</option>
+            <option value="Buy">Buy</option>
+        </select>
+        <button onclick="applyFilters()">Apply</button>
+        <button onclick="clearFilters()">Clear</button>
+    </div>
+
+    <!-- Posts Container -->
+    <div id="postsContainer" class="posts-container">
+        <div class="loading">Loading posts...</div>
+    </div>
+
+    <!-- Modals -->
+    <div id="sellModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSellForm()">&times;</span>
+            <h2>Sell Your Scrap</h2>
+            <iframe id="sellForm" src="" width="100%" height="500px" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div id="buyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBuyForm()">&times;</span>
+            <h2>Buy Scrap Material</h2>
+            <iframe id="buyForm" src="" width="100%" height="500px" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeReportForm()">&times;</span>
+            <h2>Report Fraud/Abuse</h2>
+            <iframe id="reportForm" src="" width="100%" height="500px" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
