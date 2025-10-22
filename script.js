@@ -1,35 +1,35 @@
-// Replace these with your actual Google Form URLs
+// Google Form URLs
 const FORM_URLS = {
     SELL: "https://docs.google.com/forms/d/e/1FAIpQLSfLawoPBdr1NikoulKyGQgm31HMkKtCUMAqs_WNv6cIvJamRA/viewform",
-    BUY: "https://docs.google.com/forms/d/e/1FAIpQLSdzGcZ8On8Bnh09sa-pWca7NcLBNOtdrW_hWhiqkWOh0fg3qg/viewform", 
+    BUY: "https://docs.google.com/forms/d/e/1FAIpQLSdzGcZ8On8Bnh09sa-pWca7NcLBNOtdrW_hWhiqkWOh0fg3qg/viewform",
     REPORT: "https://docs.google.com/forms/d/e/1FAIpQLSdAh29HyY8GhU5hjC5T0QhUQOJQduURC72Fp-8lYoDXIvatDQ/viewform"
 };
 
-// Google Apps Script Web App URL for real data
+// Google Apps Script Web App URL
 const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNNYbInI2miE2w5PGmiewwEOwFLcnG2clJPhOpbOzMA3icRFfdHKGXjCYwQ4iyzBA/exec";
 
-// Sample data - In real implementation, this comes from Google Sheets
+// Global variables
 let allPosts = [];
 let filteredPosts = [];
 
-// Initialize the app
+// Initialize the app when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
-    loadRealData(); // Now loading real data from Google Sheets
+    loadRealData();
 });
 
-// Load real data from Google Sheets via Google Apps Script
+// Load real data from Google Sheets
 async function loadRealData() {
     try {
         showLoading(true);
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error('Network response was not ok');
         }
         
         const data = await response.json();
         
-        // Transform the data to match our expected format
+        // Transform data to our format
         allPosts = data.map(post => ({
             type: post.Type || post.type || 'Sell',
             title: post.Title || post.title || 'No Title',
@@ -49,22 +49,21 @@ async function loadRealData() {
         showLoading(false);
         
     } catch (error) {
-        console.error('Error loading data from Google Sheets:', error);
-        // Fallback to sample data if real data fails
+        console.error('Error loading data:', error);
         loadSampleData();
         showLoading(false);
     }
 }
 
-// Show/hide loading indicator
+// Show loading state
 function showLoading(show) {
     const container = document.getElementById('postsContainer');
     if (show) {
-        container.innerHTML = '<div class="loading">Loading posts from database...</div>';
+        container.innerHTML = '<div class="loading">Loading posts...</div>';
     }
 }
 
-// Sample data function - Fallback if real data fails
+// Sample data fallback
 function loadSampleData() {
     allPosts = [
         {
@@ -81,7 +80,7 @@ function loadSampleData() {
             vendor: "Raj Sharma"
         },
         {
-            type: "Buy", 
+            type: "Buy",
             title: "Need Copper Wires",
             category: "Metal",
             quantity: "500",
@@ -92,19 +91,6 @@ function loadSampleData() {
             email: "buyer1@example.com",
             timestamp: "2024-01-14",
             vendor: "Amit Kumar"
-        },
-        {
-            type: "Sell",
-            title: "Old Newspapers",
-            category: "Paper",
-            quantity: "200",
-            rate: "8",
-            unit: "Kg",
-            city: "Bangalore",
-            mobile: "9876543212",
-            email: "seller2@example.com",
-            timestamp: "2024-01-16",
-            vendor: "Priya Singh"
         }
     ];
     
@@ -112,62 +98,54 @@ function loadSampleData() {
     renderPosts(allPosts);
 }
 
-// Render posts to the page
+// Render posts to page
 function renderPosts(posts) {
     const container = document.getElementById('postsContainer');
     
     if (posts.length === 0) {
-        container.innerHTML = '<div class="loading">No posts found matching your filters.</div>';
+        container.innerHTML = '<div class="loading">No posts found</div>';
         return;
     }
     
     container.innerHTML = posts.map(post => `
         <div class="post-card">
             <div class="post-header">
-                <div class="post-title">${escapeHtml(post.title)}</div>
+                <div class="post-title">${post.title}</div>
                 <div class="post-type ${post.type.toLowerCase()}">${post.type}</div>
             </div>
             <div class="post-details">
-                <div class="post-meta"><strong>Category:</strong> ${escapeHtml(post.category)}</div>
-                <div class="post-meta"><strong>Quantity:</strong> ${escapeHtml(post.quantity)} ${escapeHtml(post.unit)}</div>
-                <div class="post-meta"><strong>Rate:</strong> ₹${escapeHtml(post.rate)} per ${escapeHtml(post.unit)}</div>
-                <div class="post-meta"><strong>City:</strong> ${escapeHtml(post.city)}</div>
+                <div class="post-meta"><strong>Category:</strong> ${post.category}</div>
+                <div class="post-meta"><strong>Quantity:</strong> ${post.quantity} ${post.unit}</div>
+                <div class="post-meta"><strong>Rate:</strong> ₹${post.rate} per ${post.unit}</div>
+                <div class="post-meta"><strong>City:</strong> ${post.city}</div>
             </div>
             <div class="post-contact">
-                <div class="post-meta"><strong>📞 Mobile:</strong> ${escapeHtml(post.mobile)}</div>
-                <div class="post-meta"><strong>✉️ Email:</strong> ${escapeHtml(post.email)}</div>
+                <div class="post-meta"><strong>📞 Mobile:</strong> ${post.mobile}</div>
+                <div class="post-meta"><strong>✉️ Email:</strong> ${post.email}</div>
             </div>
-            <button class="report-btn" onclick="openReportForm('${escapeHtml(post.vendor)}')">
+            <button class="report-btn" onclick="openReportForm('${post.vendor}')">
                 Report Fraud/Abuse
             </button>
         </div>
     `).join('');
 }
 
-// Helper function to escape HTML for security
-function escapeHtml(unsafe) {
-    if (unsafe === null || unsafe === undefined) return '';
-    return unsafe
-        .toString()
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
 // Filter functions
 function toggleFilter() {
     const filterSection = document.getElementById('filterSection');
-    filterSection.style.display = filterSection.style.display === 'none' ? 'flex' : 'none';
+    if (filterSection.style.display === 'none') {
+        filterSection.style.display = 'flex';
+    } else {
+        filterSection.style.display = 'none';
+    }
 }
 
 function updateCityFilter() {
-    const cities = [...new Set(allPosts.map(post => post.city))].filter(city => city && city !== 'Unknown City');
+    const cities = [...new Set(allPosts.map(post => post.city))];
     const cityFilter = document.getElementById('cityFilter');
     
     cityFilter.innerHTML = '<option value="">All Cities</option>' +
-        cities.map(city => `<option value="${escapeHtml(city)}">${escapeHtml(city)}</option>`).join('');
+        cities.map(city => `<option value="${city}">${city}</option>`).join('');
 }
 
 function applyFilters() {
@@ -178,8 +156,7 @@ function applyFilters() {
     
     filteredPosts = allPosts.filter(post => {
         const matchesSearch = post.title.toLowerCase().includes(searchTerm) ||
-                            post.category.toLowerCase().includes(searchTerm) ||
-                            post.city.toLowerCase().includes(searchTerm);
+                            post.category.toLowerCase().includes(searchTerm);
         const matchesCategory = !category || post.category === category;
         const matchesCity = !city || post.city === city;
         const matchesType = !type || post.type === type;
@@ -198,11 +175,6 @@ function clearFilters() {
     renderPosts(allPosts);
 }
 
-// Refresh data function - add a refresh button to your HTML if needed
-function refreshData() {
-    loadRealData();
-}
-
 // Modal functions
 function openSellForm() {
     document.getElementById('sellForm').src = FORM_URLS.SELL;
@@ -212,8 +184,6 @@ function openSellForm() {
 function closeSellForm() {
     document.getElementById('sellModal').style.display = 'none';
     document.getElementById('sellForm').src = '';
-    // Refresh data after form submission (optional)
-    setTimeout(loadRealData, 2000);
 }
 
 function openBuyForm() {
@@ -224,13 +194,9 @@ function openBuyForm() {
 function closeBuyForm() {
     document.getElementById('buyModal').style.display = 'none';
     document.getElementById('buyForm').src = '';
-    // Refresh data after form submission (optional)
-    setTimeout(loadRealData, 2000);
 }
 
 function openReportForm(vendorName) {
-    // For Google Forms, we need the actual entry ID for the vendor field
-    // Since we don't have the exact entry ID, we'll open the form without pre-fill
     document.getElementById('reportForm').src = FORM_URLS.REPORT;
     document.getElementById('reportModal').style.display = 'block';
 }
@@ -242,31 +208,9 @@ function closeReportForm() {
 
 // Close modals when clicking outside
 window.onclick = function(event) {
-    const modals = ['sellModal', 'buyModal', 'reportModal'];
-    modals.forEach(modalId => {
-        const modal = document.getElementById(modalId);
-        if (event.target === modal) {
-            modal.style.display = 'none';
-            document.getElementById(modalId.replace('Modal', 'Form')).src = '';
-        }
-    });
-};
-
-// Add refresh button to header (optional enhancement)
-// You can add this button to your HTML header later
-function addRefreshButton() {
-    const headerButtons = document.querySelector('.header-buttons');
-    if (headerButtons && !document.querySelector('.refresh-btn')) {
-        const refreshBtn = document.createElement('button');
-        refreshBtn.className = 'refresh-btn';
-        refreshBtn.innerHTML = '🔄';
-        refreshBtn.title = 'Refresh Posts';
-        refreshBtn.onclick = refreshData;
-        headerButtons.appendChild(refreshBtn);
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+        const iframe = event.target.querySelector('iframe');
+        if (iframe) iframe.src = '';
     }
-}
-
-// Initialize refresh button when DOM loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(addRefreshButton, 1000);
-});
+};
