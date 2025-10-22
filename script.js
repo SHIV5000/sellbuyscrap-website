@@ -1,8 +1,9 @@
 // Replace these with your actual Google Form URLs
 const FORM_URLS = {
-    SELL: "YOUR_SELL_FORM_URL_HERE",
-    BUY: "YOUR_BUY_FORM_URL_HERE", 
-    REPORT: "YOUR_REPORT_FORM_URL_HERE"
+    SELL: "https://docs.google.com/forms/d/e/1FAIpQLSfLawoPBdr1NikoulKyGQgm31HMkKtCUMAqs_WNv6cIvJamRA/viewform?usp=publish-editor
+",
+    BUY: "https://docs.google.com/forms/d/e/1FAIpQLSdzGcZ8On8Bnh09sa-pWca7NcLBNOtdrW_hWhiqkWOh0fg3qg/viewform?usp=publish-editor", 
+    REPORT: "https://docs.google.com/forms/d/e/1FAIpQLSdAh29HyY8GhU5hjC5T0QhUQOJQduURC72Fp-8lYoDXIvatDQ/viewform?usp=publish-editor"
 };
 
 // Sample data - In real implementation, this comes from Google Sheets
@@ -165,4 +166,5 @@ window.onclick = function(event) {
             document.getElementById(modalId.replace('Modal', 'Form')).src = '';
         }
     });
+
 }
